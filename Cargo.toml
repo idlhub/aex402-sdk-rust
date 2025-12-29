@@ -1,0 +1,23 @@
+[package]
+name = "aex402-sdk"
+version = "0.1.0"
+edition = "2021"
+description = "Rust SDK for AeX402 AMM on Solana"
+license = "MIT"
+repository = "https://github.com/aldrin-exchange/ammasm"
+
+[dependencies]
+solana-program = "1.18"
+solana-client = "1.18"
+solana-sdk = "1.18"
+spl-token = "4.0"
+borsh = "1.2"
+thiserror = "1.0"
+num-traits = "0.2"
+
+[dev-dependencies]
+tokio = { version = "1.35", features = ["full"] }
+
+[features]
+default = []
+client = []
