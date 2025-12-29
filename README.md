@@ -1,6 +1,6 @@
-# stableswap-sdk
+# aex402-sdk
 
-Rust SDK for the StableSwap AMM on Solana.
+Rust SDK for the AeX402 AMM on Solana - Hybrid StableSwap with Virtual Pools.
 
 ## Features
 
@@ -13,13 +13,13 @@ Rust SDK for the StableSwap AMM on Solana.
 
 ```toml
 [dependencies]
-stableswap-sdk = "0.1.0"
+aex402-sdk = "0.1.0"
 ```
 
 ## Quick Start
 
 ```rust
-use stableswap_sdk::{instruction, math, state::Pool, PROGRAM_ID};
+use aex402_sdk::{instruction, math, state::Pool, PROGRAM_ID};
 use solana_sdk::pubkey::Pubkey;
 
 // Build swap instruction
@@ -87,7 +87,7 @@ instruction::get_twap(&pool, TwapWindow::Hour24)
 ### `state`
 
 ```rust
-use stableswap_sdk::state::{Pool, NPool, Farm, TwapResult};
+use aex402_sdk::state::{Pool, NPool, Farm, TwapResult};
 use borsh::BorshDeserialize;
 
 // Parse pool from account data
@@ -109,7 +109,7 @@ println!("Confidence: {}%", result.confidence_pct());
 ### `math`
 
 ```rust
-use stableswap_sdk::math;
+use aex402_sdk::math;
 
 // Calculate invariant D
 let d = math::calc_d(bal0, bal1, amp)?;
@@ -136,7 +136,7 @@ let vp = math::calc_virtual_price(bal0, bal1, supply, amp)?;
 ### `constants`
 
 ```rust
-use stableswap_sdk::{PROGRAM_ID, disc, TwapWindow};
+use aex402_sdk::{PROGRAM_ID, disc, TwapWindow};
 
 // Program ID
 println!("{}", PROGRAM_ID);
@@ -151,10 +151,10 @@ let window = TwapWindow::Hour24;
 ### `error`
 
 ```rust
-use stableswap_sdk::StableSwapError;
+use aex402_sdk::AeX402Error;
 
 // Parse error from code
-let err = StableSwapError::from(6004);
+let err = AeX402Error::from(6004);
 println!("{}", err); // "Slippage exceeded"
 ```
 

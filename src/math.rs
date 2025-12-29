@@ -4,6 +4,11 @@ use crate::constants::NEWTON_ITERATIONS;
 
 /// Calculate invariant D for 2-token pool using Newton's method
 pub fn calc_d(x: u64, y: u64, amp: u64) -> Option<u64> {
+    // Guard against division by zero
+    if x == 0 || y == 0 {
+        return Some(0);
+    }
+
     let s = x.checked_add(y)?;
     if s == 0 {
         return Some(0);
@@ -11,6 +16,11 @@ pub fn calc_d(x: u64, y: u64, amp: u64) -> Option<u64> {
 
     let mut d = s;
     let ann = amp.checked_mul(4)?; // A * n^n where n=2
+
+    // Guard against zero amp
+    if ann == 0 {
+        return None;
+    }
 
     for _ in 0..NEWTON_ITERATIONS {
         // d_p = d^3 / (4 * x * y)
@@ -32,6 +42,10 @@ pub fn calc_d(x: u64, y: u64, amp: u64) -> Option<u64> {
             .checked_mul(d as u128)?
             .checked_add(d_p.checked_mul(3)?)?;
 
+        // Guard against division by zero
+        if denom == 0 {
+            return None;
+        }
         d = (num / denom) as u64;
 
         // Check convergence
@@ -46,7 +60,17 @@ pub fn calc_d(x: u64, y: u64, amp: u64) -> Option<u64> {
 
 /// Calculate output amount y given input x for swap
 pub fn calc_y(x_new: u64, d: u64, amp: u64) -> Option<u64> {
+    // Guard against division by zero
+    if x_new == 0 {
+        return None;
+    }
+
     let ann = amp.checked_mul(4)?;
+
+    // Guard against zero amp
+    if ann == 0 {
+        return None;
+    }
 
     // c = d^3 / (4 * x_new * ann)
     let c = (d as u128)
@@ -73,6 +97,10 @@ pub fn calc_y(x_new: u64, d: u64, amp: u64) -> Option<u64> {
             .checked_add(b)?
             .checked_sub(d)?;
 
+        // Guard against division by zero
+        if denom == 0 {
+            return None;
+        }
         y = (num / denom as u128) as u64;
 
         // Check convergence
@@ -193,8 +221,13 @@ pub fn calc_price_impact(
     amp: u64,
     fee_bps: u64,
 ) -> Option<f64> {
+    // Guard against division by zero
+    if amount_in == 0 {
+        return None;
+    }
+
     let amount_out = simulate_swap(bal_in, bal_out, amount_in, amp, fee_bps)?;
-    
+
     // Price impact = 1 - (amount_out / amount_in)
     let ratio = (amount_out as f64) / (amount_in as f64);
     Some(1.0 - ratio)
